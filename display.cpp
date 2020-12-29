@@ -29,7 +29,7 @@ namespace display_ns
       TEXT_HEIGHT = h;
     }
 
-    void print(int flags, int x, int y, char *text)
+    void prePrintFlags(int flags, int x, int y)
     {
         if (flags & FLAG_CLEAR)
             display.clearDisplay();
@@ -37,13 +37,53 @@ namespace display_ns
             setSmallFont();
         if (flags & FLAG_LARGE_FONT)
             setLargeFont();
+
+
         if (flags & FLAG_LINES)
-            display.setCursor(x, (y*TEXT_HEIGHT)+TEXT_HEIGHT);
-        else
+        {
+            if (x < 0)
+                x = display.getCursorX();
+            if (y < 0)
+                y = display.getCursorY();
+            else
+                y = (y*TEXT_HEIGHT)+TEXT_HEIGHT;
             display.setCursor(x, y);
-        display.print(text);
+        }
+        else
+        {
+            if (x < 0)
+                x = display.getCursorX();
+            if (y < 0)
+                y = display.getCursorY();
+            display.setCursor(x, y);
+        }
+    }
+
+    void postPrintFlags(int flags)
+    {
         if (flags & FLAG_DISPLAY)
             display_ns::display.display();
+    }
+
+    void print(int flags, int x, int y, char *text)
+    {
+        prePrintFlags(flags, x, y);
+        display.print(text);
+        postPrintFlags(flags);
+    }
+
+    void print(int flags, int x, int y, int n)
+    {
+        prePrintFlags(flags, x, y);
+        display.print(n);
+        postPrintFlags(flags);
+    }
+
+    void print(int flags, int x, int y, unsigned long n)
+    {
+        prePrintFlags(flags, x, y);
+        display.print(n);
+        postPrintFlags(flags);
     }
 
     void print(int flags, char *text)

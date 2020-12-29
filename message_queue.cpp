@@ -47,12 +47,13 @@ bool MessageQueue::empty()
 
 void MessageQueue::get_message(int& msg, int& arg1, int& arg2)
 {
-    if (consume_message(msg, arg1, arg2))
-        return;
-
     OnGenerator();
     check_timers();
     check_pins();
+
+    if (consume_message(msg, arg1, arg2))
+        return;
+
     msg = IDLE_EVENT;
     arg1 = 0;
     arg2 = 0;
@@ -268,8 +269,22 @@ bool MessageQueue::pulse(int id)
         }
         return false;
     }
+    return pulse(id, pulses_[id].duration);
+}
+
+bool MessageQueue::pulse(int id, unsigned long duration_us)
+{
+    if (id < 0 || id >= MAX_PULSES)
+    {
+        if (debug_)
+        {
+            Serial.print("MessageQueue: pulse() id out of range, id=");
+            Serial.println(id);
+        }
+        return false;
+    }
     digitalWrite(pulses_[id].pin, HIGH);
-    pulses_[id].pulseComplete = micros() + pulses_[id].duration;
+    pulses_[id].pulseComplete = micros() + duration_us;
     return true;
 }
 
@@ -288,6 +303,7 @@ bool MessageQueue::digitalRead(int id, int pin, int def, unsigned long debounceT
     PIN_SET_DIGITAL(pins_[id]);
     pins_[id].debounceTime = debounceTimeMicros;
     pins_[id].triggerComplete = 0;
+    pinMode(pin, INPUT);
     if (debug_)
     {
         Serial.print("MessageQueue: digitalRead(), id=");
@@ -329,8 +345,8 @@ void MessageQueue::check_pins()
     {
         if (pulses_[id].pulseComplete && pulses_[id].pulseComplete < now)
         {
-            if (debug_)
-                Serial.println("pulse complete");
+            //if (debug_)
+                //Serial.println("pulse complete");
             digitalWrite(pulses_[id].pin, LOW);
             pulses_[id].pulseComplete = 0;
         }

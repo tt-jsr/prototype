@@ -23,10 +23,10 @@ namespace display_ns
     static const int FLAG_LINES = 0x10;         // y-coordinate is in lines
 
     // Write a message to the screen
+    // if x or y < 0, use the current position
     void print(int flags, int x, int y, char *text);
-
-    // Write to the current cursor
-    void print(int flags, char *text);
+    void print(int flags, int x, int y, int);
+    void print(int flags, int x, int y, unsigned long);
 
     // Clesar the display
     void clearDisplay();

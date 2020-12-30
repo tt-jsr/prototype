@@ -1,5 +1,5 @@
 #include "common.h"
-#if defined(USE_TIMER_APP)
+#if defined(USE_ANALOG_APP)
 
 #include "Arduino.h"
 #include <SoftwareSerial.h>
@@ -8,29 +8,16 @@
 #include "message_queue.h"
 
 MessageQueue message_queue;
-static const int sigGenOutputPin = 7;
-
-// Timers
-static const int TIMER_ID = 0;
-static const int ELAPSED_TIME_TIMER_ID = 1;
-
-// Pulses
-static const int PULSE_ID = 0;
-static const int pulsePin = 2;
 
 // pin reads
 static const int SIG_GEN_INPUT_ID = 0;
-static const int sigGenInputPin = 4;
+static const int sigGenInputPin = A0;
 
-#define MILLISECONDS 1000
 void appSetup() {
-  message_queue.setDebug(false);
+  message_queue.setDebug(true);
   display_ns::setLargeFont();
-  message_queue.create_timer(TIMER_ID, 100, true);
-  message_queue.create_timer(ELAPSED_TIME_TIMER_ID, 1000, true);
-  message_queue.digitalPulse(PULSE_ID, pulsePin, 1000);
-  message_queue.digitalRead(SIG_GEN_INPUT_ID, sigGenInputPin, LOW, 0);
-  pinMode(sigGenOutputPin, OUTPUT);
+  analogReference(INTERNAL4V3);
+  message_queue.analogRead(SIG_GEN_INPUT_ID, sigGenInputPin, 10000);
 }
 
 static const int line1_flags = display_ns::FLAG_CLEAR | display_ns::FLAG_LINES;
@@ -43,21 +30,12 @@ void appLoop() {
     switch(msg)
     {
     case TIMER_EVENT:
-        if (arg1 == TIMER_ID)
-        {
-            message_queue.pulse(PULSE_ID);
-        }
-        if (arg1 == ELAPSED_TIME_TIMER_ID)
-        {
-            display_ns::print(line1_flags, 0, 0, "# secs:");
-            display_ns::print(line2_flags, 0, 1, micros()/1000000);
-        }
         break;
     case VALUE_EVENT:
         if (arg1 == SIG_GEN_INPUT_ID)
         {
-            //Serial.println("SIG GEN Input");
-            digitalWrite(sigGenOutputPin, arg2);
+            display_ns::print(line1_flags, 0, 0, "Input:");
+            display_ns::print(line2_flags, 0, 1, arg2);
         }
         else
         {
@@ -76,4 +54,4 @@ void appLoop() {
         Serial.println (arg2);
     }
 }
-#endif  // USE_TIMER_APP
+#endif  // USE_ANALOG_APP

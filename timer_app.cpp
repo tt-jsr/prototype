@@ -33,8 +33,8 @@ void appSetup() {
   pinMode(sigGenOutputPin, OUTPUT);
 }
 
-static const int line1_flags = display_ns::FLAG_CLEAR | display_ns::FLAG_LINES;
-static const int line2_flags = display_ns::FLAG_DISPLAY | display_ns::FLAG_LINES;
+static const int line1_flags = display_ns::DISPLAY_CLEAR | display_ns::DISPLAY_LINES;
+static const int line2_flags = display_ns::DISPLAY_DISPLAY | display_ns::DISPLAY_LINES;
 
 void appLoop() {
     int msg, arg1, arg2;

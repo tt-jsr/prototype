@@ -20,8 +20,8 @@ void appSetup() {
   message_queue.analogRead(SIG_GEN_INPUT_ID, sigGenInputPin, 0);
 }
 
-static const int line1_flags = display_ns::FLAG_CLEAR | display_ns::FLAG_LINES;
-static const int line2_flags = display_ns::FLAG_DISPLAY | display_ns::FLAG_LINES;
+static const int line1_flags = display_ns::DISPLAY_CLEAR | display_ns::DISPLAY_LINES;
+static const int line2_flags = display_ns::DISPLAY_DISPLAY | display_ns::DISPLAY_LINES;
 
 static const int WINDOW = 10;
 struct MovingAverage
@@ -87,7 +87,7 @@ void appLoop() {
             int avg = moveavg.avg();
             display_ns::print(line1_flags, 0, 0, "Input: ");
             display_ns::display.print(arg2);
-            display_ns::print(display_ns::FLAG_LINES, 0, 2, "Avg: ");
+            display_ns::print(display_ns::DISPLAY_LINES, 0, 2, "Avg: ");
             display_ns::print(line2_flags, -1, -1, avg);
         }
         else

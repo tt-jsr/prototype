@@ -7,7 +7,7 @@
 #include "display.h"
 #include "message_queue.h"
 
-MessageQueue message_queue;
+MessageQueue message_queue(8, 2, 1, 1, 1);
 static const int sigGenOutputPin = 7;
 
 // Timers

@@ -10,7 +10,7 @@
 #include "message_queue.h"
 
 int counter = 0;
-MessageQueue message_queue;
+MessageQueue message_queue(8, 1, 1, 1, 1);
 
 void appSetup() {
   display_ns::setLargeFont();

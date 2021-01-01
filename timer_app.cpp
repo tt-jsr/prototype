@@ -37,7 +37,8 @@ static const int line1_flags = display_ns::DISPLAY_CLEAR | display_ns::DISPLAY_L
 static const int line2_flags = display_ns::DISPLAY_DISPLAY | display_ns::DISPLAY_LINES;
 
 void appLoop() {
-    int msg, arg1, arg2;
+    int msg, arg1;
+    unsigned long arg2;
     message_queue.get_message(msg, arg1, arg2);
     
     switch(msg)

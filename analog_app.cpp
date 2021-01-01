@@ -68,7 +68,8 @@ struct MovingAverage
 MovingAverage moveavg;
 
 void appLoop() {
-    int msg, arg1, arg2;
+    int msg, arg1;
+    unsigned long arg2;
     message_queue.get_message(msg, arg1, arg2);
     
     switch(msg)
@@ -83,7 +84,7 @@ void appLoop() {
             //if (arg2 > (lastRead+epsilon))
                 //lastRead = arg2;
                 //
-            moveavg.add(arg2);
+            moveavg.add((int)arg2);
             int avg = moveavg.avg();
             display_ns::print(line1_flags, 0, 0, "Input: ");
             display_ns::display.print(arg2);

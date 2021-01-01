@@ -2,8 +2,6 @@
 #if defined(USE_IDLE_APP)
 
 #include "Arduino.h"
-//#include "avr/pgmspace.h"
-//#include "spi.h"
 #include <SoftwareSerial.h>
 
 #include "display.h"
@@ -17,7 +15,8 @@ void appSetup() {
 }
 
 void appLoop() {
-    int msg, arg1, arg2;
+    int msg, arg1;
+    unsigned long arg2;
     message_queue.get_message(msg, arg1, arg2);
     
     switch(msg)

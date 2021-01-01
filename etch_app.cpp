@@ -10,11 +10,11 @@
 MessageQueue message_queue(8, 1, 3, 1, 1);
 
 // pin reads
-static const int X_POT_ID = 0;
+static const int X_POT_ID = 0;          // 10K pot for x-axis
 static const int xPotPin = A0;
-static const int Y_POT_ID = 1;
+static const int Y_POT_ID = 1;          // 10K pot for y-axis
 static const int yPotPin = A1;
-static const int CLEAR_SCREEN_ID = 2;
+static const int CLEAR_SCREEN_ID = 2;   // Button to clear the screen, push to ground
 static const int clearScreenPin = 2;
 
 
@@ -22,8 +22,6 @@ void appSetup() {
   message_queue.setDebug(true);
   display_ns::setSmallFont();
   analogReference(INTERNAL4V3);
-  //message_queue.analogRead(X_POT_ID, xPotPin, 100);
-  //message_queue.analogRead(Y_POT_ID, yPotPin, 100);
   message_queue.digitalRead(CLEAR_SCREEN_ID, clearScreenPin, HIGH, 1000);
   pinMode(clearScreenPin, INPUT_PULLUP);
   pinMode(xPotPin, INPUT);
@@ -33,7 +31,8 @@ void appSetup() {
 }
 
 void appLoop() {
-    int msg, arg1, arg2;
+    int msg, arg1;
+    unsigned long arg2;
     message_queue.get_message(msg, arg1, arg2);
     
     switch(msg)

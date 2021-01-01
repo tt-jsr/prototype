@@ -10,7 +10,7 @@
 MessageQueue message_queue(8, 1, 1, 1, 1);
 
 // pin reads
-static const int SIG_GEN_INPUT_ID = 0;
+static const int SIG_GEN_INPUT_ID = 0;  // 10K pot
 static const int sigGenInputPin = A0;
 
 
@@ -22,9 +22,12 @@ void appSetup() {
   display_ns::clearDisplay();
   display_ns::display.display();
 }
+
 int x = 0;
+
 void appLoop() {
-    int msg, arg1, arg2;
+    int msg, arg1;
+    unsigned long arg2;
     message_queue.get_message(msg, arg1, arg2);
     
     switch(msg)

@@ -6,8 +6,11 @@
 #include "oled_128x64.h"
 
 MessageQueue message_queue(8);
-Timer<2, 1000, true> timer;
+Timer<2, 250, true> timer;
+DigitalWrite<13> output;
+
 int counter(0);
+int pinState = LOW;
 
 uint16_t height;
 
@@ -32,8 +35,6 @@ void appLoop()
     switch(msg)
     {
     case TIMER_EVENT:
-        Serial.print("timer event, id=");
-        Serial.println(arg1);
         if (arg1 == timer.id)
         {
             char buf[64];
@@ -42,8 +43,8 @@ void appLoop()
             display.setCursor(0, height);
             display.println(buf);
             display.display();
-            Serial.print("counter: ");
-            Serial.println(counter);
+            pinState = pinState == LOW ? HIGH : LOW;
+            output.write(pinState);
         }
         break;
     case STATE_EVENT:
@@ -55,7 +56,6 @@ void appLoop()
     case IDLE_EVENT:
         break;
     }
-    
 }
 
 #endif  // USE_EMPTY_APP
